@@ -1,0 +1,194 @@
+{% extends 'template_base.html' %}
+
+{% block view_section %}
+<style>
+
+.charts-container{
+    overflow-x: hidden;
+    /* Désactive le scroll horizontal */
+    scrollbar-width: none;
+    /* Cache la barre de scroll sur Firefox */
+    -ms-overflow-style: none;
+}
+
+    #section-main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100vh;
+        padding: 10px;
+        overflow: hidden;
+    }
+
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 10px;
+        width: 100%;
+        max-width: 900px;
+        margin-bottom: 10px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        text-align: center;
+        font-size: 0.9rem;
+        font-weight: bold;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    .stat-card:hover {
+        transform: scale(1.05);
+    }
+
+    .charts-container {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        overflow-y: auto;
+        padding-bottom: 10px;
+    }
+
+    .chart-container {
+        width: 90%;
+        height: 30vh;
+        max-width: 800px;
+        background: white;
+        padding: 10px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        margin-bottom: 10px;
+    }
+</style>
+
+<section id="section-main">
+
+    <!-- Statistiques globales -->
+    <div class="stats-container">
+        <div class="stat-card">🏭 Stock Total: <span id="stockTotal">0</span></div>
+        <div class="stat-card">💰 Valeur Totale: <span id="valeurStock">0</span> €</div>
+        <div class="stat-card">⚠️ Ruptures: <span id="rupturesStock">0</span></div>
+        <div class="stat-card">🔄 Rotation Stock: <span id="rotationStock">0</span> %</div>
+        <div class="stat-card">📦 Occupation: <span id="occupationStock">0</span> %</div>
+        <div class="stat-card">📊 Marge Brute: <span id="margeBrute">0</span> %</div>
+    </div>
+
+    <!-- Graphiques -->
+    <div class="charts-container">
+        <div class="chart-container">
+            <canvas id="stockChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="categoryChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="lowStockChart"></canvas>
+        </div>
+    </div>
+
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const ctxStock = document.getElementById('stockChart').getContext('2d');
+        const ctxCategory = document.getElementById('categoryChart').getContext('2d');
+        const ctxLowStock = document.getElementById('lowStockChart').getContext('2d');
+
+        // Simulation de données (à remplacer par des données réelles via API)
+        const stockTotal = 500;  
+        const valeurStock = 150000;  
+        const rupturesStock = 8;  
+        const rotationStock = 65;  
+        const occupationStock = 75;  
+        const margeBrute = 30;  
+
+        // Mise à jour des valeurs dans les cartes
+        document.getElementById('stockTotal').innerText = stockTotal;
+        document.getElementById('valeurStock').innerText = valeurStock.toLocaleString();
+        document.getElementById('rupturesStock').innerText = rupturesStock;
+        document.getElementById('rotationStock').innerText = rotationStock;
+        document.getElementById('occupationStock').innerText = occupationStock;
+        document.getElementById('margeBrute').innerText = margeBrute;
+
+        // Graphique du stock global
+        new Chart(ctxStock, {
+            type: 'line',
+            data: {
+                labels: ["01/02", "02/02", "03/02", "04/02", "05/02", "06/02", "07/02", "07/03"],
+                datasets: [{
+                    label: 'Évolution du Stock',
+                    data: [50, 45, 60, 70, 65, 80, 75, 100],
+                    borderColor: '#4C3590',
+                    backgroundColor: 'rgba(76, 53, 144, 0.2)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 5,
+                    pointBackgroundColor: '#4C3590'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: true } },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.1)' } }
+                }
+            }
+        });
+
+        // Graphique des stocks par catégorie
+        new Chart(ctxCategory, {
+            type: 'bar',
+            data: {
+                labels: ["Électronique", "Vêtements", "Alimentation", "Jouets", "Livres"],
+                datasets: [{
+                    label: 'Stock par Catégorie',
+                    data: [120, 80, 150, 60, 90],
+                    backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4C3590", "#32CD32"],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: true } },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.1)' } }
+                }
+            }
+        });
+
+        // Graphique des stocks faibles
+        new Chart(ctxLowStock, {
+            type: 'doughnut',
+            data: {
+                labels: ["Produit A", "Produit B", "Produit C", "Produit D"],
+                datasets: [{
+                    label: 'Stock Faible',
+                    data: [5, 2, 3, 1],
+                    backgroundColor: ["#FF4500", "#FF6347", "#FF7F50", "#FF8C00"]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: true, position: 'bottom' }
+                }
+            }
+        });
+    });
+</script>
+
+{% endblock %}

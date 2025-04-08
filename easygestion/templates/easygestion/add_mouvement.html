@@ -1,0 +1,29 @@
+{% extends 'template_base.html' %}
+
+{% block view_section %}
+<form method="post">
+    {% csrf_token %}
+    
+    <label for="produit">Produit :</label>
+    <select name="produit" id="produit" required>
+        {% for produit in produits %}
+            <option value="{{ produit.id }}">{{ produit.nom }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="type_mouvement">Type de Mouvement :</label>
+    <select name="type_mouvement" id="type_mouvement" required>
+        <option value="entrée">Entrée</option>
+        <option value="sortie">Sortie</option>
+        <option value="retour">Retour</option>
+    </select>
+
+    <label for="quantite">Quantité :</label>
+    <input type="number" name="quantite" id="quantite" min="1" required>
+
+    <label for="motif">Motif :</label>
+    <textarea name="motif" id="motif" rows="3"></textarea>
+
+    <button type="submit">Enregistrer</button>
+</form>
+{% endblock %}

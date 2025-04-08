@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        
+        main {
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+        }
+
+        /* Barre latérale */
+        #lateral-barre {
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-items: center;
+            justify-content: center;
+            background-color: #141627;
+            gap: 30px;
+            padding-top: 50px;
+        }
+
+        /* Nom de l'application */
+        #name-app {
+            position: absolute;
+            top: 35px;
+            p {
+            font-size: 30px;
+            color: white;
+            font-weight: bold;
+        }
+        }
+
+        /* Boutons latéraux */
+        .btn-lateral {
+            border-radius: 8px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            padding-left: 20px;
+            width: 200px;
+            transition: background 0.3s;
+            a {
+            color: #757590;
+            font-size: 18px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            font-size: 24px;
+        }
+        }
+
+        /* Effets au survol */
+        .btn-lateral:hover {
+            background-color: #4C3590;
+        }
+
+        .btn-lateral:hover a {
+            color: white;
+        }
+        /* Navigation */
+    nav {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 20px;
+        background-color: #141627;
+        color: white;
+        border-radius: 10px;
+    }
+
+    nav p {
+        font-size: 18px;
+        font-weight: bold;
+    }
+    .btn-deconnexion {
+        background-color: #4C3590;
+        color: white;
+        height: 40px;
+        width: 160px;
+        border-radius: 8px;
+        border: none;
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.3s ease-in-out;
+    }
+
+    .btn-deconnexion:hover {
+        background-color: #37266b;
+    }
+    /* Conteneur principal */
+    #section-main {
+        width: 100%;
+        display: flex;
+        flex-direction: column;   
+        align-items: center;
+        background-color: white;
+        padding: 20px;
+    }
+    </style>
+</head>
+<body>
+    {% if user.is_authenticated %}
+    <main>
+        <!-- Barre latérale -->
+        <section id="lateral-barre">
+            <div id="name-app">
+                <p>EasyStocker</p>
+            </div>
+            <div class="btn-lateral">
+                <a class="link-opt" href="{% url 'easygestion:home' %}">
+                    <i class="fas fa-home"></i> Accueil
+                </a>
+            </div>
+            <div class="btn-lateral">
+                <a class="link-opt" href="{% url 'easygestion:product' %}">
+                    <i class="fas fa-box"></i> Produits
+                </a>
+            </div>
+            <div class="btn-lateral">
+                <a class="link-opt" href="{% url 'easygestion:move' %}">
+                    <i class="fas fa-exchange-alt"></i> Mouvements
+                </a>
+            </div>
+            <div class="btn-lateral">
+                <a class="link-opt" href="{% url 'easygestion:vente' %}">
+                    <i class="fas fa-shopping-cart"></i> Ventes
+                </a>
+            </div>
+            <div class="btn-lateral">
+                <a class="link-opt" href="{% url 'easygestion:warning' %}">
+                    <i class="fas fa-bell"></i> Alertes
+                </a>
+            </div>
+        </section>
+
+        <!-- Contenu principal -->
+        <section id="section-main">
+            {% if user.is_authenticated %}
+            <nav>
+                <i class="fas fa-warehouse "></i> 
+                <a href="{% url 'logout' %}"><button class="btn-deconnexion">Déconnexion</button></a>
+            </nav> 
+            {%endif%}  
+
+            {% block view_section %}{% endblock %}
+        </section>
+    </main>
+    {%endif%}
+    
+</body>
+</html>

@@ -1,0 +1,123 @@
+{% extends 'template_base.html' %}
+
+{% block view_section %}
+<style>
+    /* Cache la barre de défilement sur Chrome, Safari et WebKit */
+    .table-container::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Conteneur de la table avec scroll */
+    .table-container {
+        width: 90%;
+        height: 60vh;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        position: relative;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        overflow-x: hidden;
+        /* Désactive le scroll horizontal */
+        scrollbar-width: none;
+        /* Cache la barre de scroll sur Firefox */
+        -ms-overflow-style: none;
+    }
+
+
+    /* Table style */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #fff;
+    }
+
+    /* Fixe l'en-tête lors du scroll */
+    thead {
+        background-color: #141627;
+        color: white;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    thead th {
+        padding: 12px;
+        text-align: center;
+    }
+
+    /* Style des cellules */
+    tbody td {
+        padding: 12px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Effet hover */
+    tbody tr:hover {
+        background-color: #f5f5f5;
+    }
+
+
+    #add-prod {
+        background-color: #E05398;
+        margin-top: 20px;
+        color: white;
+        height: 40px;
+        width: 160px;
+        border-radius: 8px;
+        border: none;
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.3s ease-in-out;
+        margin-bottom: 12px;
+    }
+
+    #add-prod:hover {
+        background-color: #C84280;
+        /* Une teinte plus foncée de #E05398 */
+    }
+    /* Image */
+    img {
+        width: 50px;
+        height: 50px;
+        border-radius: 5px;
+        object-fit: cover;
+    }
+</style>
+
+
+<section id="section-main">
+    <div
+        style="align-items: end;display: flex;flex-direction: row;justify-content: right;width: 90%;font-size: 24px;margin-bottom: 10px;">
+        <a href="{%url 'easygestion:add_product'%}"><button id="add-prod">Nouvelle vente</button></a>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Nom de produit</th>
+                    <th>Quantité</th>
+                    <th>Prix total</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vente in info_table %}
+                <tr>
+                    <td>
+                        <img src="{{ vente.img }}" alt="Produit">
+                    </td>
+                    <td>{{ vente.produit }}</td>
+                    <td>{{ vente.quantite }}</td>
+                    <td>{{ vente.prix_total }}</td>
+                    <td>{{ vente.date }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+{% endblock %}
